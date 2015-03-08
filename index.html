@@ -87,15 +87,16 @@
       <option id="Jhelum" value="JLM">Jhelum</option>  
   </select>
   
+  <!-- Working below...... -->
   <h3><b>&nbsp &nbsp Select Mineral</b> </h3>
-  <select id="dist" >
+  <select id="mineral" >
       <option id="noData" value="default">Default</option>
       <option id="Coal" value="Coal">Coal</option>
       <option id="LimeStone" value="LimeStone">Lime Stone</option>  
   </select>
   
   <h3><b>&nbsp &nbsp Select by Production</b> </h3>
-  <select id="dist" >
+  <select id="Production" >
       <option id="noData" value="default">Default</option>
       <option id="Highest" value="Highest">Coal</option>
       <option id="Medium" value="Medium">Medium</option>
@@ -104,7 +105,7 @@
 
   <h3><pre><b>&nbsp Licences Expires 
   In year</b></pre> </h3>
-  <select id="dist" >
+  <select id="ExpireYear" >
       <option id="noData" value="default">Default</option>
       <option id="2015" value="2015">2015</option>
       <option id="2016" value="2016">2016</option>
@@ -136,13 +137,59 @@
    }
    return false
 };
+    
+    // Changing Mineral by dropdown
+  document.getElementById("mineral").onchange = function() {
+    var mineral = document.getElementById("mineral").value;
+  
+  if(mineral=="Coal"){
+    var data = "Data/Coal.geojson"
+    dataLayer = loadData(data)     // Search control retuning error in this way
+
+   }
+   else if(mineral=="LimeStone"){
+    var data = {}
+    dataLayer = loadData(data)
+   }
+   else {
+    var data = {}
+    dataLayer = loadData(data)
+   }
+   return false
+};
+    
     // Data Loding
-   var dataLayer = new L.GeoJSON.AJAX("Data/Coal.geojson",
-    {
-      style: style,
-      onEachFeature: onEachFeature
-    });
-  dataLayer.addTo(map);
+    var dataPath = "Data/Coal.geojson"
+    dataLayer = loadData(dataPath)
+      function loadData(dataPath){
+                var dataLayer = new L.GeoJSON.AJAX(dataPath,
+      {
+                style: style,
+                onEachFeature: onEachFeature
+      });
+                dataLayer.addTo(map);
+
+                return dataLayer
+}
+  
+  // Search 
+  var searchControl = new L.Control.Search({layer: dataLayer, 
+    propertyName: 'ML_No', circleLocation:false});
+
+  searchControl.on('search_locationfound', function(e) {
+
+  e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
+  e.target.getBounds();
+  
+  if(e.layer._popup)
+    e.layer.openPopup();
+
+  }).on('search_collapsed', function(e) {
+            dataLayer.eachLayer(function(layer) { //restore feature color
+            dataLayer.resetStyle(layer);
+  }); 
+  });
+    map.addControl( searchControl );  //inizialize search control
 
   // Labeling Feature
  
@@ -165,29 +212,7 @@
       controlLoader.hide();
       },5000);
   
-  // Get colour for legend
-  function getColor(d) {
-          return d > 20000 ? '#800026' :
-          d > 15000  ? '#BD0026' :
-          d > 10000  ? '#E31A1C' :
-          d > 5000  ? '#FC4E2A' :
-          d > 2500   ? '#FD8D3C' :
-          d > 1000   ? '#FEB24C' :
-          d > 100   ? '#FED976' :
-          '#FFEDA0';
-  }
-  // Style
-  function style(feature) {
-  return {
-          fillColor: getColor(feature.properties.Production),
-          weight: 2,
-          opacity: 1,
-          color: 'white',
-          dashArray: '3',
-          fillOpacity: 0.7
-          };
-  }
-  // HighLight  
+  // HighLight clicked feature
   function highlightFeature(e) {
           var layer = e.target;
           info.update(layer.feature.properties);
@@ -201,13 +226,14 @@
       if (!L.Browser.ie && !L.Browser.opera) {
           layer.bringToFront();
           }}
-  // Reset
+  // Reset all styles of selected 
+  // "Currently this function is swhiched off"
   function resetHighlight(e) {
   dataLayer.resetStyle(e.target);
   info.update();
   }
   
-  // ZoomTo
+  // ZoomTo clicked feature
   function zoomToFeature(e) {
   var layer = e.target;
   var feat = layer.feature;
@@ -220,7 +246,7 @@
         highlightFeature(e);
     }
   
-  // Analysis
+  //  Function to work on clicked fature
   function onEachFeature(feature, layer) {
   layer.on({
   // mouseover: highlightFeature, // To be Checked working still.....
@@ -240,13 +266,37 @@
 
   // method that we will use to update the control based on feature properties passed
   info.update = function (props) {
-  this._div.innerHTML = '<h4>Coal</h4>' +  (props ?
+  this._div.innerHTML = '<h4>Coal Map</h4>' +  (props ?
   '<b>' + props.Lessee + '</b><br />' + props.ML_No 
-  : 'Hover over a parcel');
+  : 'Designed by:Abdul Rehman Ch');
   };
 
   info.addTo(map);
 
+  // Get colour for legend
+  function getColor(d) {
+          return d > 20000 ? '#800026' :
+          d > 15000  ? '#BD0026' :
+          d > 10000  ? '#E31A1C' :
+          d > 5000  ? '#FC4E2A' :
+          d > 2500   ? '#FD8D3C' :
+          d > 1000   ? '#FEB24C' :
+          d > 100   ? '#FED976' :
+          '#FFEDA0';
+  }
+  
+  // Style
+  
+  function style(feature) {
+  return {
+          fillColor: getColor(feature.properties.Production),
+          weight: 2,
+          opacity: 1,
+          color: 'white',
+          dashArray: '3',
+          fillOpacity: 0.7
+          };
+  }
   var legend = L.control({position: 'bottomright'});
 
   legend.onAdd = function (map) {
@@ -266,24 +316,7 @@
 
   legend.addTo(map);
 
-  // Search 
-  var searchControl = new L.Control.Search({layer: dataLayer, 
-    propertyName: 'ML_No', circleLocation:false});
-
-  searchControl.on('search_locationfound', function(e) {
-
-  e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
-  e.target.getBounds();
-  
-  if(e.layer._popup)
-    e.layer.openPopup();
-
-  }).on('search_collapsed', function(e) {
-            dataLayer.eachLayer(function(layer) { //restore feature color
-            dataLayer.resetStyle(layer);
-  }); 
-  });
-    map.addControl( searchControl );  //inizialize search control
+    
     dataLayer.once("load", function(){
     console.log("finished loaded shapefile");
   });
