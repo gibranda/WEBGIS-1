@@ -1,101 +1,119 @@
 <!doctype html><html lang="en"> 
 
-
 <html>
   <head>
     <meta charset='utf-8'/>
     <title>Coal Leases</title>
     <link rel="shortcut icon" href="images/layers.png" type="image/x-icon">
-    <link rel="stylesheet" href="leaflet.css" />
+    <link rel="stylesheet" href="Leaflet/leaflet.css" />
     <link rel="stylesheet" href="search/src/leaflet-search.css" />
     <link rel="stylesheet" href="leaflet-loader/leaflet-loader.css" />
+    <link rel="stylesheet" href="index.css" />
     
-    <script src="leaflet.js"></script>
+    <script src="Leaflet/leaflet.js" type="text/javascript"></script>
+    <script src="Leaflet/leaflet.ajax.js" type="text/javascript"></script>
     
     <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
-    <script src="Google/leaflet-google.js"></script>
+    <script src="Google/leaflet-google.js" type="text/javascript"></script>
     
-    <script src="search/src/leaflet-search.js"></script>
+    <script src="search/src/leaflet-search.js" type="text/javascript"></script>
     
-    <script src="leaflet-loader/leaflet-loader.js"></script>
+    <script src="leaflet-loader/leaflet-loader.js" type="text/javascript"></script>
     
-    <script src="Data/Coal.Js"></script>
-
   <style>
 
   html { height: 100% }
   body { height: 100%; margin: 0; padding: 0;background-color: green;}
   #map{ height: 100% }
 
-  /*Fix for Google Layers*/
+  /*CSS Fix for Google Layers*/
   .leaflet-map-pane {
-  z-index: 2 !important;
+          z-index: 2 !important;
   }
 
   .leaflet-google-layer {
-  z-index: 1 !important;
+          z-index: 1 !important;
   }
   .info {
-  padding: 6px 8px;
-  font: 14px/16px Arial, Helvetica, sans-serif;
-  background: white;
-  background: rgba(255,255,255,0.8);
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
-  border-radius: 5px;
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
   }
   .info h4 {
-  margin: 0 0 5px;
-  color: #777;
+        margin: 0 0 5px;
+        color: #777;
   }       
   .legend {
-  line-height: 18px;
-  color: #555;
+        line-height: 18px;
+        color: #555;
   }
   .legend i {
-  width: 18px;
-  height: 18px;
-  float: left;
-  margin-right: 8px;
-  opacity: 0.7;
+        width: 18px;
+        height: 18px;
+        float: left;
+        margin-right: 8px;
+        opacity: 0.7;
   } 
   </style>
-
-
   </head>
   <body>
   <div style=" height:100%; width: 100%; border:0.5% solid green"> 
-  <div id="header" style="height:93px; width: 100%; background-image: url('images/header-back.jpg');float:left;text-align:center ">
+  <div id="header" style="height:93px; width: 100%; 
+  background-image: url('images/header-back.jpg');float:left;text-align:center ">
   <div id= "headerinner" 
   Style="height:93px; width: 1000px;float:left;margin-left:10%"> 
   
   <div id="logo" style="float: left;height:93px; width: 460px;">
-  <h1><b><i>MINERAL RESOURCE MANAGEMENT</i></b></h1> </div>
+  <h1><b><i>MINERAL RESOURCE MANAGEMENT</i></b></h1> 
+  </div>
   
   <div id="headerpic" style="height:93px; width: 540px; float: left;padding:centre;background-image: url('images/header-pictures.jpg');"></div>
   </div>
   <hr style="clear:both">
   </div>
   
-  <div id="nav" style="margin-top:0.5%;height:80.5%; width:14.5%; background-color: silver;float:left;text-align:centre">
+  <div id="nav" style="margin-top:0.5%;height:80.5%; width:16%; 
+  background-color: silver;float:left;text-align:centre">
+  
   <h2><b>&nbsp &nbsp Navigation Pan</b> </h2>
   <hr>
-  <h2><b>&nbsp &nbsp Select District</b> </h2>
+  <h3><b>&nbsp &nbsp Select District</b> </h3>
   <select id="dist" >
       <option id="pk" value="default">Default</option>
       <option id="CKL" value="CKL">Chakwal</option>
-      <option id="KHB" value="KHB">Kushab</option>  
+      <option id="Jhelum" value="JLM">Jhelum</option>  
   </select>
   
-  <h2><b>&nbsp &nbsp Select Mineral</b> </h2>
+  <h3><b>&nbsp &nbsp Select Mineral</b> </h3>
   <select id="dist" >
       <option id="noData" value="default">Default</option>
       <option id="Coal" value="Coal">Coal</option>
       <option id="LimeStone" value="LimeStone">Lime Stone</option>  
   </select>
   
+  <h3><b>&nbsp &nbsp Select by Production</b> </h3>
+  <select id="dist" >
+      <option id="noData" value="default">Default</option>
+      <option id="Highest" value="Highest">Coal</option>
+      <option id="Medium" value="Medium">Medium</option>
+      <option id="Low" value="Low">Low</option>
+  </select>
+
+  <h3><pre><b>&nbsp Licences Expires 
+  In year</b></pre> </h3>
+  <select id="dist" >
+      <option id="noData" value="default">Default</option>
+      <option id="2015" value="2015">2015</option>
+      <option id="2016" value="2016">2016</option>
+      <option id="2017" value="2017">2017</option>
+  </select>
+
   </div>
   
-  <div style="margin-top:0.5%; width:70%; height:80%; float:left; border: 2px dotted blue" id="map">
+  <div style="margin-top:0.5%; width:63.5%; height:80%; float:left; border: 2px dotted blue" id="map">
   
   <script type='text/javascript'>
   
@@ -104,127 +122,113 @@
   L.control.scale().addTo(map);
   
   // Changing dist by dropdown
-
   document.getElementById("dist").onchange = function() {
-   var Dist = document.getElementById("dist").value;
-    
-
-   if(Dist=="CKL"){ 
-   map.panTo([32.787, 73.147]);
+    var Dist = document.getElementById("dist").value;
+  
+  if(Dist=="CKL"){ 
+      map.panTo([32.787, 73.147]);
    }
-   
-   else if(Dist=="KHB"){
-   map.panTo([32.299246, 72.352585]);
+   else if(Dist=="JLM"){
+      map.panTo([32.657600, 73.002775]);
    }
-   
    else{
-    map.panTo([32.300, 73.147]);
+      map.panTo([32.787, 73.147]);
    }
    return false
 };
-
-  
-  // Data Loding
-  var dataLayer = L.geoJson(coalData,
+    // Data Loding
+   var dataLayer = new L.GeoJSON.AJAX("Data/Coal.geojson",
     {
       style: style,
       onEachFeature: onEachFeature
-
     });
-  
-  dataLayer.addTo(map)
+  dataLayer.addTo(map);
 
+  // Labeling Feature
+ 
+    // Finding..........
   
-  //            Layer Switcher
+  // Layer Switcher
   var googleLayer = new L.Google('ROADMAP'),
-  googleLayerh = new L.Google('HYBRID');
+      googleLayerh = new L.Google('HYBRID');
   var baseLayers = {
-  "ROADMAP": googleLayer,
-  "HYBRID": googleLayerh
-  };
+      "ROADMAP": googleLayer,
+      "HYBRID": googleLayerh
+      };
 
   L.control.layers(baseLayers).addTo(map);
   map.addLayer(googleLayer);
 
-
   // Loader ICON
   var controlLoader = L.control.loader().addTo(map).show();
-  setTimeout(function() {
-  controlLoader.hide();
-  },5000);
+      setTimeout(function() {
+      controlLoader.hide();
+      },5000);
   
   // Get colour for legend
   function getColor(d) {
-  return d > 20000 ? '#800026' :
-  d > 15000  ? '#BD0026' :
-  d > 10000  ? '#E31A1C' :
-  d > 5000  ? '#FC4E2A' :
-  d > 2500   ? '#FD8D3C' :
-  d > 1000   ? '#FEB24C' :
-  d > 100   ? '#FED976' :
-  '#FFEDA0';
+          return d > 20000 ? '#800026' :
+          d > 15000  ? '#BD0026' :
+          d > 10000  ? '#E31A1C' :
+          d > 5000  ? '#FC4E2A' :
+          d > 2500   ? '#FD8D3C' :
+          d > 1000   ? '#FEB24C' :
+          d > 100   ? '#FED976' :
+          '#FFEDA0';
   }
   // Style
   function style(feature) {
   return {
-  fillColor: getColor(feature.properties.Production),
-  weight: 2,
-  opacity: 1,
-  color: 'white',
-  dashArray: '3',
-  fillOpacity: 0.7
-  };
+          fillColor: getColor(feature.properties.Production),
+          weight: 2,
+          opacity: 1,
+          color: 'white',
+          dashArray: '3',
+          fillOpacity: 0.7
+          };
   }
-
-
-
   // HighLight  
   function highlightFeature(e) {
+          var layer = e.target;
+          info.update(layer.feature.properties);
+          layer.setStyle({
+          weight: 5,
+          color: '#666',
+          dashArray: '',
+          fillOpacity: 0.7
+          });
 
-  var layer = e.target;
-  info.update(layer.feature.properties);
-
-  layer.setStyle({
-  weight: 5,
-  color: '#666',
-  dashArray: '',
-  fillOpacity: 0.7
-  });
-
-  if (!L.Browser.ie && !L.Browser.opera) {
-  layer.bringToFront();
-  }
-  }
+      if (!L.Browser.ie && !L.Browser.opera) {
+          layer.bringToFront();
+          }}
   // Reset
   function resetHighlight(e) {
   dataLayer.resetStyle(e.target);
   info.update();
   }
+  
   // ZoomTo
-  
   function zoomToFeature(e) {
-  
   var layer = e.target;
   var feat = layer.feature;
-  var content = '<strong> Parcel Information</strong><br>'
-                  +'<i>' + "ML_No:" + feat.properties.ML_No + '</i>' +
-                  '<br>' +"Lessee Name:"+ feat.properties.Lessee +"<br>"+"Production:"+ feat.properties.Production+ '<br>';
-          document.getElementById('cont').innerHTML = content;
-          map.fitBounds(e.target.getBounds());
-  // alert(content);
-  }
+        document.getElementById('ml_no').innerHTML = feat.properties.ML_No;
+        document.getElementById('lessee').innerHTML = feat.properties.Lessee;
+        document.getElementById('prod').innerHTML = feat.properties.Production;
+        map.fitBounds(e.target.getBounds());
+        
+        // Highlight feature by clicking..
+        highlightFeature(e);
+    }
   
   // Analysis
-
   function onEachFeature(feature, layer) {
   layer.on({
-  mouseover: highlightFeature,
-  mouseout: resetHighlight,
+  // mouseover: highlightFeature, // To be Checked working still.....
+  // mouseout: resetHighlight,
   click: zoomToFeature,
-
   });
   }
-  
+ 
   // Info box
   var info = L.control();
 
@@ -253,53 +257,64 @@
 
   // loop through our density intervals and generate a label with a colored square for each interval
   for (var i = 0; i < grades.length; i++) {
-  div.innerHTML +=
-  '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
-  grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+      div.innerHTML +=
+      '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+        grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
   }
-
   return div;
   };
 
   legend.addTo(map);
 
-  
   // Search 
-  var searchControl = new L.Control.Search({layer: dataLayer, propertyName: 'ML_No', circleLocation:false});
+  var searchControl = new L.Control.Search({layer: dataLayer, 
+    propertyName: 'ML_No', circleLocation:false});
 
   searchControl.on('search_locationfound', function(e) {
 
   e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
-  // e.target.getBounds();
+  e.target.getBounds();
+  
   if(e.layer._popup)
-  e.layer.openPopup();
+    e.layer.openPopup();
 
   }).on('search_collapsed', function(e) {
-
-  dataLayer.eachLayer(function(layer) { //restore feature color
-  dataLayer.resetStyle(layer);
+            dataLayer.eachLayer(function(layer) { //restore feature color
+            dataLayer.resetStyle(layer);
   }); 
   });
-
-  map.addControl( searchControl );  //inizialize search control
-
-
-  dataLayer.once("load", function(){
-  console.log("finished loaded shapefile");
-
+    map.addControl( searchControl );  //inizialize search control
+    dataLayer.once("load", function(){
+    console.log("finished loaded shapefile");
   });
   </script>
   </div>
-  <div id="att" style="margin-top:0.5%;height:80.5%;width:15%; background-color:silver;float:left"> 
-  <h2> <b>&nbsp &nbsp &nbsp &nbsp Attributes</b></h2><hr>
+  <div id="att" style="margin-top:0.5%;height:80.5%;width:20%; 
+  background-color:silver;float:left"> 
+  <h2> <b>&nbsp &nbsp &nbsp &nbsp Parcel Information</b></h2><hr>
   <div id = "prp" style="">
-  <p id = "cont">No Data</p>
+  
+ <table id = "cont" style="width:100%">
+  <tr>
+    <th>ML_No.</th>
+    <th>Lessee Name</th>
+    <th>Prodution</th>
+  </tr>
+  <tr>
+    <td id = "ml_no"> </td>
+    <td id="lessee"></td>
+    <td id="prod"></td>
+  </tr>
+  
+</table> 
   </div>
 
   </div>
   <div id="footer" style="background-color:#FFA500;clear:both;text-align:center;
-  border-radius:3px;alignment-adjust:baseline;opacity: 0.8">
-  Copyright © MINES AND MINERAL, PUNJAB <div style="float:right">Designed by Abdul Rehman</div></div> 
+        border-radius:3px;alignment-adjust:baseline;opacity: 0.8">
+  Copyright © MINES AND MINERAL, PUNJAB 
+  <div style="float:right">Designed by Abdul Rehman</div>
+  </div> 
   </div>
 
   </body>
