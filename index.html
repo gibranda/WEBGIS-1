@@ -157,25 +157,26 @@ header.update = function () {
   '</select>'
   
   };
-   
    Navgation.addTo(map); 
 
     // Data Loding
+    var searchControl;
     var dataPath = "Data/Coal.geojson"
 
       var rawData = $.getJSON(dataPath);
       rawData.then(function(data) 
       {
+//  To add all data
+     
+      //   var dataLayer = L.geoJson(data,
+      // {
+      //           style: style,
+      //           onEachFeature: onEachFeature
+      // }
 
-        var dataLayer = L.geoJson(data,
-      {
-                style: style,
-                onEachFeature: onEachFeature
-      }
+      //     );
 
-          );
-
-        // THIS IS NEW
+        // Filtered Data
         var coal = L.geoJson(data, {
             style: style,
             onEachFeature: onEachFeature,
@@ -196,28 +197,26 @@ header.update = function () {
 
         });
 
-          searchControl = search(dataLayer)
-          map.removeLayer(dataLayer)
-        // map.addLayer(dataLayer)
-        // map.removeControl( searchControl );
-       
        // Filtering data by drop down
-      
-       
+           
         document.getElementById("mineral").onchange = function() {
     var mineral = document.getElementById("mineral").value;
 
             document.getElementById("Production").disabled=false;
             document.getElementById("ExpireYear").disabled=false;
   
+                if (searchControl != null){
+                map.removeControl( searchControl );
+              };
                 
                 if(mineral=="Coal"){
                   map.removeLayer(limeStone)
                   map.addLayer(coal)
+                  searchControl = search(coal)
 
                  }
                  else if(mineral=="LimeStone"){
-                  
+                  searchControl = search(limeStone)
                   map.removeLayer(coal)
                   map.addLayer(limeStone)
                  }
