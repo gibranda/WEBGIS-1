@@ -59,7 +59,8 @@
         map.addLayer(googleLayer);
 		var shpurl='Data/MWEB';
       
-    var shpfile = new L.Shapefile(shpurl,{onEachFeature:function(feature, layer) {
+    var shpfile = new L.Shapefile(shpurl,{
+      onEachFeature:function(feature, layer) {
     	if (feature.properties) {
 			layer.bindPopup(Object.keys(feature.properties).map(function(k){
 				return k + ": " + feature.properties[k] ;

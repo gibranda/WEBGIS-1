@@ -45,6 +45,16 @@
         box-shadow: 0 0 15px rgba(0,0,0,0.2);
         border-radius: 5px;
   }
+
+   .nav {
+        padding: 6px 8px;
+        font: 14px/16px Arial, Helvetica, sans-serif;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 5px;
+  }
+
   .info h4 {
         margin: 0 0 5px;
         color: #777;
@@ -60,72 +70,95 @@
         margin-right: 8px;
         opacity: 0.7;
   } 
+
   </style>
   </head>
   <body>
-  <!-- <div style=" height:100%; width: 100%; border:0.5% solid green">  -->
-  <div id="header" style="height:92px; width: 100%; 
-  background-image: url('images/header-back.jpg');float:left;text-align:center ">
-  <div id= "headerinner" 
-  Style="height:93px; width: 1000px;float:left;margin-left:10%"> 
+  <div style=" height:100%; width: 100%;"> 
   
-  <div id="logo" style="float: left;height:92px; width: 460px;">
-  <h1><b><i>MINERAL RESOURCE MANAGEMENT</i></b></h1> 
-  </div>
+        <div style="margin-top:0%; width:100%; height:100%; float:left;" id="map">
+        
   
-  <div id="headerpic" style="height:90px; width: 540px; float: left;padding:centre;background-image: url('images/header-pictures.jpg');"></div>
-  </div>
-  <hr style="clear:both">
-  </div>
-  
-  <div id="nav" style="margin-top:0%;height:80.5%; width:16%; 
-  background-color: silver;float:left;text-align:centre">
-  
-  <h2><b>&nbsp &nbsp Navigation Pan</b> </h2>
-  <hr>
-  <h3><b>&nbsp &nbsp Select District</b> </h3>
-  <select id="dist" >
-      <option id="pk" value="default">Default</option>
-      <option id="CKL" value="CKL">Chakwal</option>
-      <option id="Jhelum" value="JLM">Jhelum</option>  
-  </select>
-  
-  <!-- Working below...... -->
-  <h3><b>&nbsp &nbsp Select Mineral</b> </h3>
-  <select id="mineral" >
-      <option id="noData" value="default">Default</option>
-      <option id="Coal" value="Coal">Coal</option>
-      <option id="LimeStone" value="LimeStone">Lime Stone</option>  
-  </select>
-  
-  <h3><b>&nbsp &nbsp Select by Production</b> </h3>
-  <select id="Production" >
-      <option id="noData" value="default">Default</option>
-      <option id="Highest" value="Highest">Highest</option>
-      <option id="Medium" value="Medium">Medium</option>
-      <option id="Low" value="Low">Low</option>
-  </select>
-
-  <h3><pre><b>&nbsp Licences Expires 
-  In year</b></pre> </h3>
-  <select id="ExpireYear" >
-      <option id="noData" value="default">Default</option>
-      <option id="2015" value="2015">2015</option>
-      <option id="2016" value="2016">2016</option>
-      <option id="2017" value="2017">2017</option>
-  </select>
-
-  </div>
-  
-  <div style="margin-top:0%; width:63.5%; height:80%; float:left;" id="map">
-  
-  <script type='text/javascript'>
-  
+<script type='text/javascript'>
   mapCenter = new L.LatLng(32.787, 73.147);
-  var map = new L.Map('map', {center: mapCenter, zoom: 11});
-  L.control.scale().addTo(map);
-
+  var map = new L.Map('map', {center: mapCenter, zoom: 11,zoomControl: false});
+  map.addControl(new L.Control.Zoom({position: 'topright'}));
+//  Title of Map
+var title =  L.control({position: 'topleft'});
+title.onAdd = function (map){
+    this._div = L.DomUtil.create('div', 'nav'); // create a div with a class "info"
+  this.update();
+  return this._div;
+};
+title.update = function () {
     
+      // '<!-- background-image: url('images/header-back.jpg'); -->'+
+  this._div.innerHTML = '<div id="header" class="title_box" style="height:10%; width: 100%; '+
+         'float:left;text-align:left; margin-left: 5%" >'+
+      '<h1> <b>Mining Cadastre Portal</b></h1>'+
+         '</div>'
+  };
+  title.addTo(map); 
+  //  poweredby 
+  var header =  L.control({position: 'bottomright'});
+header.onAdd = function (map){
+    this._div = L.DomUtil.create('div', 'nav'); // create a div with a class "header"
+  this.update();
+  return this._div;
+};
+header.update = function () {
+    
+      // '<!-- background-image: url('images/header-back.jpg'); -->'+
+  this._div.innerHTML = '<h4> Powered by Geoband Inc. </h4>'
+
+  };
+  header.addTo(map); 
+  L.control.scale({position: 'bottomright'}).addTo(map);
+ //  Navgation pan on Map
+ var Navgation = L.control({position: 'bottomleft'});
+
+  Navgation.onAdd = function (map) {
+  this._div = L.DomUtil.create('div', 'nav'); // create a div with a class "info"
+  this.update();
+  return this._div;
+  };
+  
+  Navgation.update = function () {
+    
+  this._div.innerHTML = '<h4> <b>Navigation Pan</b></h4>' + 
+  
+  '<h4> Select District </h4>' +
+  '<select id="dist" >' +
+      '<option id="pk" value="default">Default</option>' +
+      '<option id="CKL" value="CKL">Chakwal</option>' +
+      '<option id="Jhelum" value="JLM">Jhelum</option>  ' +
+  '</select>' + 
+  '<h4>Select Mineral </h4>' +
+  '<select id="mineral" >' +
+      '<option id="noData" value="default">Default</option>' +
+      '<option id="Coal" value="Coal">Coal</option>' +
+      '<option id="LimeStone" value="LimeStone">Lime Stone</option>  '+
+  '</select>' +
+  
+  '<h4>Select by Production </h4>' +
+  '<select id="Production" >'+
+      '<option id="noData" value="default">Default</option>'+
+      '<option id="Highest" value="Highest">Highest</option>'+
+      '<option id="Medium" value="Medium">Medium</option>'+
+      '<option id="Low" value="Low">Low</option>'+
+  '</select>' +
+
+  '<h4>Licences Expires In year</h4>' +
+  '<select id="ExpireYear" >'+
+      '<option id="noData" value="default">Default</option>'+
+      '<option id="2015" value="2015">2015</option>'+
+      '<option id="2016" value="2016">2016</option>'+
+     ' <option id="2017" value="2017">2017</option>'+
+  '</select>'
+  
+  };
+   
+   Navgation.addTo(map); 
 
     // Data Loding
     var dataPath = "Data/Coal.geojson"
@@ -169,8 +202,13 @@
         // map.removeControl( searchControl );
        
        // Filtering data by drop down
+      
+       
         document.getElementById("mineral").onchange = function() {
     var mineral = document.getElementById("mineral").value;
+
+            document.getElementById("Production").disabled=false;
+            document.getElementById("ExpireYear").disabled=false;
   
                 
                 if(mineral=="Coal"){
@@ -225,8 +263,14 @@
     // map.addControl( searchControl );  //inizialize search control
 
   // Changing dist by dropdown
+  document.getElementById("mineral").disabled=true;
+  document.getElementById("Production").disabled=true;
+  document.getElementById("ExpireYear").disabled=true;
   document.getElementById("dist").onchange = function() {
     var Dist = document.getElementById("dist").value;
+    
+    document.getElementById("mineral").disabled=false;
+    
   
   if(Dist=="CKL"){ 
       map.panTo([32.787, 73.147]);
@@ -288,10 +332,11 @@
   // HighLight clicked feature
   function highlightFeature(e) {
           var layer = e.target;
+                   
           info.update(layer.feature.properties);
           layer.setStyle({
           weight: 5,
-          color: '#666',
+          color: 'red',
           dashArray: '',
           fillOpacity: 0.7
           });
@@ -302,29 +347,43 @@
   // Reset all styles of selected 
   // "Currently this function is swhiched off"
   function resetHighlight(e) {
-  dataLayer.resetStyle(e.target);
+  if (lastClicked != null){
+
+   var layer = lastClicked.target;
+   var feature = layer.feature;
+  
+  layer.setStyle({
+    
+    fillColor: getColor(feature.properties.Production),
+          weight: 2,
+          opacity: 1,
+          color: 'white',
+          dashArray: '3',
+          fillOpacity: 0.7
+          }
+    );
+  }
   info.update();
   }
   
   // ZoomTo clicked feature
+  var lastClicked;
   function zoomToFeature(e) {
-  var layer = e.target;
-  var feat = layer.feature;
-        document.getElementById('ml_no').innerHTML = feat.properties.ML_No;
-        document.getElementById('lessee').innerHTML = feat.properties.Lessee;
-        document.getElementById('prod').innerHTML = feat.properties.Production;
+        resetHighlight(lastClicked)
+        lastClicked = e;
         map.fitBounds(e.target.getBounds());
-        
-        // Highlight feature by clicking..
-        highlightFeature(e);
+        highlightFeature(e)
+   
     }
   
   //  Function to work on clicked fature
   function onEachFeature(feature, layer) {
+    
   layer.on({
-  // mouseover: highlightFeature, // To be Checked working still.....
+  // mouseover: highlightFeature, 
   // mouseout: resetHighlight,
   click: zoomToFeature,
+  
   });
   }
  
@@ -339,8 +398,18 @@
 
   // method that we will use to update the control based on feature properties passed
   info.update = function (props) {
-  this._div.innerHTML = '<h4>Coal Map</h4>' +  (props ?
-  '<b>' + props.Lessee + '</b><br />' + props.ML_No 
+    
+  this._div.innerHTML = '<h4>Parcels Detail</h4>' +  
+  (props ?
+  
+                                        props.ML_No + "<br />"+
+                                        props.Lessee+ "<br />"+
+                                        "Mining Lease"+ "<br />"+
+                                        "Date Grant: " + props.Grant_date+ "<br />"+
+                                        "Expire Date "  + props.end_date + "<br />"+
+                                        "Mineral: " +  props.Mineral +"<br />"+
+                                        "Area: " +  props.area+ "<br />"+
+                                        "Production" +  props.Production 
   : 'Designed by:Abdul Rehman Ch');
   };
 
@@ -393,35 +462,13 @@
     // dataLayer.once("load", function(){
     // console.log("finished loaded shapefile");
   // });
+//  Header of map
+
+
   </script>
   </div>
-  <div id="att" style="margin-top:0%;height:80.5%;width:20%; 
-  background-color:silver;float:left"> 
-  <h2> <b>&nbsp &nbsp &nbsp &nbsp Parcel Information</b></h2><hr>
-  <div id = "prp" style="">
   
- <table id = "cont" style="width:100%">
-  <tr>
-    <th>ML_No.</th>
-    <th>Lessee Name</th>
-    <th>Prodution</th>
-  </tr>
-  <tr>
-    <td id = "ml_no"> </td>
-    <td id="lessee"></td>
-    <td id="prod"></td>
-  </tr>
-  
-</table> 
-  </div>
-
-  </div>
-  <div id="footer" style="background-color:#FFA500;clear:both;text-align:center;
-        border-radius:3px;alignment-adjust:baseline;opacity: 0.8">
-  Copyright © MINES AND MINERAL, PUNJAB 
-  <div style="float:right">Designed by Abdul Rehman</div>
-  </div> 
-  </div>
+   </div>
 
   </body>
   </html>
